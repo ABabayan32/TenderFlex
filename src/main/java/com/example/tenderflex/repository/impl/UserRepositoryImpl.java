@@ -19,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getUserByUsername(String username) {
-        List<User> users =  this.jdbcTemplate.query("SELECT * FROM tender_flex.User WHERE \"User_name\" = ?", new UserMapper(), username);
+        List<User> users =  this.jdbcTemplate.query("SELECT * FROM tender_flex.User INNER JOIN tender_flex.role ON tender_flex.user.role_id = tender_flex.role.role_id WHERE \"User_name\" = ?;", new UserMapper(), username);
         if (users.isEmpty()){
             return null;
         }

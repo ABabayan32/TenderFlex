@@ -2,6 +2,7 @@ package com.example.tenderflex.config;
 
 
 import com.example.tenderflex.controller.filter.CustomAuthenticationFilter;
+import com.example.tenderflex.controller.filter.CustomAuthorizationFilter;
 import com.example.tenderflex.repository.UserRepository;
 import com.example.tenderflex.service.UserService;
 import com.example.tenderflex.service.impl.UserServiceImpl;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
 @Configuration
@@ -46,16 +51,22 @@ public class SecurityConfig {
     @Bean
     @Autowired
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, UserService userService) throws Exception {
-       return http.userDetailsService(userService).cors().and().csrf().disable().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests().anyRequest().permitAll()
-               .and().addFilter(new CustomAuthenticationFilter(authenticationManager))
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+       return http.csrf().disable()
+               .sessionManagement().sessionCreationPolicy(STATELESS)
+               .and().authorizeHttpRequests().requestMatchers("/api/login").permitAll().and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN").and()
+               .authorizeHttpRequests().anyRequest().authenticated()
+               .and().addFilter(customAuthenticationFilter)
+               .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                .build();
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web)->{
+
         };
     }
 }
