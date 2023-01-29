@@ -15,18 +15,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.tenderflex.util.Constants.LOGIN_URL;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class Config {
 
     @Bean
     public UserService userService( UserRepository userRepository, PasswordEncoder passwordEncoder){
@@ -52,11 +52,11 @@ public class SecurityConfig {
     @Autowired
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, UserService userService) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        customAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
        return http.csrf().disable()
                .sessionManagement().sessionCreationPolicy(STATELESS)
-               .and().authorizeHttpRequests().requestMatchers("/api/login").permitAll().and()
-               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN").and()
+               .and().authorizeHttpRequests().requestMatchers(LOGIN_URL).permitAll().and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/user/save/**").hasAnyAuthority("ROLE_ADMIN").and()
                .authorizeHttpRequests().anyRequest().authenticated()
                .and().addFilter(customAuthenticationFilter)
                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -66,7 +66,13 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web)->{
-
+            web.ignoring().requestMatchers("/v3/api-docs/**",
+                    "/configuration/ui",
+                    "/swagger-resources/**",
+                    "/configuration/security",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/webjars/**");
         };
     }
 }
