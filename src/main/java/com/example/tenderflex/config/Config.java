@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.example.tenderflex.util.Constants.LOGIN_URL;
+import static com.example.tenderflex.util.Constants.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
@@ -50,13 +50,22 @@ public class Config {
 
     @Bean
     @Autowired
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, UserService userService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
         customAuthenticationFilter.setFilterProcessesUrl(LOGIN_URL);
        return http.csrf().disable()
                .sessionManagement().sessionCreationPolicy(STATELESS)
                .and().authorizeHttpRequests().requestMatchers(LOGIN_URL).permitAll().and()
-               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/user/save/**").hasAnyAuthority("ROLE_ADMIN").and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/users").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/offers").hasAnyAuthority(ROLE_BIDDER).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/offers/me").hasAnyAuthority(ROLE_BIDDER).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/offers/{id}").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/tenders").hasAnyAuthority(ROLE_CONTRACTOR).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders").hasAnyAuthority(ROLE_BIDDER).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me").hasAnyAuthority(ROLE_CONTRACTOR).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/{id}").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/{id}/offers").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me/offers").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().anyRequest().authenticated()
                .and().addFilter(customAuthenticationFilter)
                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
