@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public class CPVRepositoryImpl implements CPVRepository {
 
-    public final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public CPVRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate=jdbcTemplate;

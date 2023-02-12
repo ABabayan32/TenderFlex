@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public class TypeRepositoryImpl implements TypeRepository {
-    public final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public TypeRepositoryImpl (JdbcTemplate jdbcTemplate){
         this.jdbcTemplate=jdbcTemplate;

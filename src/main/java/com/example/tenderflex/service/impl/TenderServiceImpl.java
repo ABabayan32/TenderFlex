@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.tenderflex.util.Constants.ROLE_BIDDER;
+
 @Service
 public class TenderServiceImpl implements TenderService {
 
@@ -26,8 +28,16 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     public List<Tender> getTendersByUser(Paging paging)   {
-       User user = userService.getCurrentUser();
-        return tenderRepository.getTendersByUserId(user.getUserId(), paging);
+        User user = userService.getCurrentUser();
+        List<Tender> tenders = tenderRepository.getTendersByUserId(user.getUserId(), paging);
+        removeDecisionsFilesIfNotApplicable(tenders);
+        return tenders;
+    }
+
+    @Override
+    public Integer getTendersCountByUser()   {
+        User user = userService.getCurrentUser();
+        return tenderRepository.getTendersCountByUserId(user.getUserId());
     }
 
      public void addTender (Tender tender ) {
@@ -38,8 +48,14 @@ public class TenderServiceImpl implements TenderService {
 
     @Override
     public List<Tender> getAllTenders(Paging paging) {
+        List<Tender> tenders = tenderRepository.getAllTenders(paging);
+        removeDecisionsFilesIfNotApplicable(tenders);
+        return tenders;
+    }
 
-        return tenderRepository.getAllTenders(paging);
+    @Override
+    public Integer getAllTendersCount() {
+        return tenderRepository.getAllTendersCount();
     }
 
     @Override
@@ -47,5 +63,14 @@ public class TenderServiceImpl implements TenderService {
         return tenderRepository.getTenderByTenderId(tenderId);
     }
 
+    private void removeDecisionsFilesIfNotApplicable(List<Tender> tenders){
+       User currentUser = userService.getCurrentUser();
+        tenders.forEach(tender->{
+            if(currentUser.getRole().getName().equals(ROLE_BIDDER)){
+                tender.setAwardFileKey(null);
+                tender.setDeclineFileKey(null);
+            }
+        });
+    }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class CPVServiceImpl implements CPVService {
 
-    public final CPVRepository cpvRepository;
+    private final CPVRepository cpvRepository;
     public CPVServiceImpl (CPVRepository cpvRepository) {
         this.cpvRepository=cpvRepository;
     }

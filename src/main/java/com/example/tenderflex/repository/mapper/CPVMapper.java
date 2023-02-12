@@ -1,6 +1,5 @@
 package com.example.tenderflex.repository.mapper;
 import com.example.tenderflex.model.CPV;
-import com.example.tenderflex.model.Type;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

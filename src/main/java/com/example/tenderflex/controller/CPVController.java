@@ -1,10 +1,7 @@
 package com.example.tenderflex.controller;
 
 import com.example.tenderflex.model.CPV;
-import com.example.tenderflex.model.Tender;
-import com.example.tenderflex.model.Type;
 import com.example.tenderflex.service.CPVService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cpvs")
 public class CPVController {
-    public final CPVService cpvService;
+    private final CPVService cpvService;
 
     public CPVController(CPVService cpvService) {
         this.cpvService = cpvService;

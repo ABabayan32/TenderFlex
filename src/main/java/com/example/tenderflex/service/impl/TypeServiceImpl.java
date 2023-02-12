@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class TypeServiceImpl implements TypeService {
 
-    public final TypeRepository typeRepository;
+    private final TypeRepository typeRepository;
 
     public TypeServiceImpl (TypeRepository typeRepository){
         this.typeRepository=typeRepository;

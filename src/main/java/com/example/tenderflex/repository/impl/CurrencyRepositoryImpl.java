@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public class CurrencyRepositoryImpl implements CurrencyRepository {
-    public final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public CurrencyRepositoryImpl (JdbcTemplate jdbcTemplate ) {  this.jdbcTemplate= jdbcTemplate;}
 

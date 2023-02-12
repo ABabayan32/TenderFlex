@@ -9,10 +9,10 @@ public interface TenderService {
 
 
      List<Tender> getTendersByUser(Paging paging)  ;
-
+     Integer getTendersCountByUser()  ;
      void addTender (Tender tender) ;
-
      List <Tender> getAllTenders (Paging paging);
+     Integer getAllTendersCount ();
      Tender getTenderByTenderId (Long tenderId);
 
 

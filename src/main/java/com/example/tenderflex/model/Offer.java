@@ -1,9 +1,27 @@
 package com.example.tenderflex.model;
 
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class Offer {
+
+    public Offer(int id, String name, String officialName, String natRegNumber, String townCity, String contPersonName,
+                 String contPersonSurname, String phoneNumber, int bidPrice, Long userId, Long tenderId, OfferStatus offerStatus,
+                 Long offerDate,
+                 String offerFileKey) {
+        this.id = id;
+        this.name = name;
+        this.officialName = officialName;
+        this.natRegNumber = natRegNumber;
+        this.townCity = townCity;
+        this.contPersonName = contPersonName;
+        this.contPersonSurname = contPersonSurname;
+        this.phoneNumber = phoneNumber;
+        this.bidPrice = bidPrice;
+        this.userId = userId;
+        this.tenderId = tenderId;
+        this.offerStatus = offerStatus;
+        this.offerFileKey = offerFileKey;
+        this.offerDate = offerDate;
+    }
 
     private int id;
     private String name;
@@ -16,6 +34,33 @@ public class Offer {
     private int bidPrice;
     private Long userId;
     private Long tenderId;
+    private OfferStatus offerStatus;
+    private Long offerDate;
+    private String offerFileKey;
+
+    public Long getOfferDate() {
+        return offerDate;
+    }
+
+    public void setOfferDate(Long offerDate) {
+        this.offerDate = offerDate;
+    }
+
+    public String getOfferFileKey() {
+        return offerFileKey;
+    }
+
+    public void setOfferFileKey(String offerFileKey) {
+        this.offerFileKey = offerFileKey;
+    }
+
+    public OfferStatus getOfferStatus() {
+        return offerStatus;
+    }
+
+    public void setOfferStatus(OfferStatus offerStatus) {
+        this.offerStatus = offerStatus;
+    }
 
     public Long getUserId() {return userId;}
 

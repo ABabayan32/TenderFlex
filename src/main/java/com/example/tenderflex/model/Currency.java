@@ -1,9 +1,12 @@
 package com.example.tenderflex.model;
 
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class Currency {
+
+    public Currency(String name, int currencyId) {
+        this.name = name;
+        this.currencyId = currencyId;
+    }
 
     private String name;
     private int currencyId;
