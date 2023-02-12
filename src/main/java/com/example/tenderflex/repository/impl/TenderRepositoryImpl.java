@@ -33,9 +33,8 @@ public class TenderRepositoryImpl implements TenderRepository {
     @Override
     public void createTender(Tender tender) {
          jdbcTemplate.update(
-                         "INSERT INTO tender_flex.tender (" +
-                                 "contractorname," +
-                                 "nationalRegNumber," +
+                         "INSERT INTO tender_flex.tender ("+
+                                  "nationalRegNumber," +
                                  "towncity," +
                                  "contactPersonName," +
                                  "contactPersonsurname," +
@@ -46,8 +45,8 @@ public class TenderRepositoryImpl implements TenderRepository {
                                  "deadlineofsub," +
                                  "deadforsinging, " +
                                  "tender_name," +
-                                 "user_id)"+
-                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                 "user_id ) " +
+                 "VALUES (?,?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?),"+
                  tender.getContractorName(),
                  tender.getNationalRegNumber(),
                  tender.getTownCity(),
@@ -60,8 +59,7 @@ public class TenderRepositoryImpl implements TenderRepository {
                  tender.getDeadLineOfSub(),
                  tender.getDeadForSinging(),
                  tender.getName(),
-                 tender.getUserId()
-         );
+                 tender.getUserId() );
 
     }
 

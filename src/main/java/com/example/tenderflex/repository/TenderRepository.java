@@ -1,4 +1,5 @@
 package com.example.tenderflex.repository;
+import com.example.tenderflex.model.Offer;
 import com.example.tenderflex.model.Paging;
 import com.example.tenderflex.model.Tender;
 
@@ -12,7 +13,5 @@ public interface TenderRepository {
 
     List <Tender> getAllTenders (Paging page) ;
      Tender getTenderByTenderId (Long tenderId);
-
-
 
 }

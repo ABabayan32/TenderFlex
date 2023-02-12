@@ -10,15 +10,15 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    /*@PostMapping("/save")
+    @PostMapping()
     public ResponseEntity<Void> save(@RequestBody @NonNull User user){
         userService.saveUser(user);
         return ResponseEntity.ok().build();
-    }*/
+    }
 }
