@@ -1,10 +1,8 @@
 package com.example.tenderflex.repository.impl;
 
 import com.example.tenderflex.model.Role;
-import com.example.tenderflex.model.User;
 import com.example.tenderflex.repository.RoleRepository;
 import com.example.tenderflex.repository.mapper.RoleMapper;
-import com.example.tenderflex.repository.mapper.UserMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

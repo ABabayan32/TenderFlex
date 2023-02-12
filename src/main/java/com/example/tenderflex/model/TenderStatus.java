@@ -1,11 +1,12 @@
 package com.example.tenderflex.model;
 
-public class Role {
+public class TenderStatus {
     private Long id;
-    private String Name;
-    public Role(Long id, String name) {
+    private String name;
+
+    public TenderStatus(Long id, String name) {
         this.id = id;
-        Name = name;
+        this.name = name;
     }
 
     public Long getId() {
@@ -17,10 +18,10 @@ public class Role {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 }

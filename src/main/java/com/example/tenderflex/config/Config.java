@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static com.example.tenderflex.util.Constants.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -58,14 +60,14 @@ public class Config {
                .and().authorizeHttpRequests().requestMatchers(LOGIN_URL).permitAll().and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/users").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/offers").hasAnyAuthority(ROLE_BIDDER).and()
-               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/offers/me").hasAnyAuthority(ROLE_BIDDER).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/offers/me/**").hasAnyAuthority(ROLE_BIDDER).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/offers/{id}").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/tenders").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders").hasAnyAuthority(ROLE_BIDDER).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me").hasAnyAuthority(ROLE_CONTRACTOR).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me/**").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/{id}").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
-               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/{id}/offers").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
-               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me/offers").hasAnyAuthority(ROLE_CONTRACTOR).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/{id}/offers").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().anyRequest().authenticated()
                .and().addFilter(customAuthenticationFilter)
                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -75,13 +77,23 @@ public class Config {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web)->{
-            web.ignoring().requestMatchers("/v3/api-docs/**",
+            web.ignoring().requestMatchers(HttpMethod.OPTIONS, "/**").requestMatchers("/v3/api-docs/**",
                     "/configuration/ui",
                     "/swagger-resources/**",
                     "/configuration/security",
                     "/swagger-ui.html",
                     "/swagger-ui/**",
                     "/webjars/**");
+        };
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");            }
         };
     }
 }

@@ -1,10 +1,14 @@
 package com.example.tenderflex.model;
 
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class Country {
-     private String name;
+
+    public Country(String name, int countryId) {
+        this.name = name;
+        this.countryId = countryId;
+    }
+
+    private String name;
      private int countryId;
 
     public int getCountryId() {return countryId;}

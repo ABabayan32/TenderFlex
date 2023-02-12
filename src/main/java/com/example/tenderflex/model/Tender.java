@@ -1,13 +1,39 @@
 package com.example.tenderflex.model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
-@AllArgsConstructor
-@NoArgsConstructor
 public class Tender {
 
-     private Long id;
+    public Tender() {
+    }
+
+    public Tender(Long id, String name, Long userId, String contractorName, String nationalRegNumber, String townCity,
+                  String contactPersonName, String contactPersonSurname, String phoneNumber, Double minValue, Double maxValue,
+                  Long publicDate, Long deadLineOfSub, Long deadForSinging, TenderStatus tenderStatus, String contractFileKey,
+                  String declineFileKey, String awardFileKey, Long countryId, Long cvpCodeId, Long tenderTypeId, Long currencyId) {
+        this.id = id;
+        this.name = name;
+        this.userId = userId;
+        this.contractorName = contractorName;
+        this.nationalRegNumber = nationalRegNumber;
+        this.townCity = townCity;
+        this.contactPersonName = contactPersonName;
+        this.contactPersonSurname = contactPersonSurname;
+        this.phoneNumber = phoneNumber;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.publicDate = publicDate;
+        this.deadLineOfSub = deadLineOfSub;
+        this.deadForSinging = deadForSinging;
+        this.tenderStatus = tenderStatus;
+        this.contractFileKey = contractFileKey;
+        this.declineFileKey = declineFileKey;
+        this.awardFileKey = awardFileKey;
+        this.countryId = countryId;
+        this.cvpCodeId = cvpCodeId;
+        this.tenderTypeId = tenderTypeId;
+        this.currencyId = currencyId;
+    }
+
+    private Long id;
      private String name;
      private Long userId;
 
@@ -26,6 +52,86 @@ public class Tender {
     private Long deadLineOfSub;
 
     private Long deadForSinging;
+
+    private TenderStatus tenderStatus;
+
+    private String contractFileKey;
+
+    private String declineFileKey;
+
+    private String awardFileKey;
+
+    private Long countryId;
+    private Long cvpCodeId;
+
+    private Long tenderTypeId;
+
+    private Long currencyId;
+
+
+    public Long getTenderTypeId() {
+        return tenderTypeId;
+    }
+
+    public void setTenderTypeId(Long tenderTypeId) {
+        this.tenderTypeId = tenderTypeId;
+    }
+
+    public Long getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(Long currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public Long getCvpCodeId() {
+        return cvpCodeId;
+    }
+
+    public void setCvpCodeId(Long cvpCodeId) {
+        this.cvpCodeId = cvpCodeId;
+    }
+
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+
+    public String getContractFileKey() {
+        return contractFileKey;
+    }
+
+    public void setContractFileKey(String contractFileKey) {
+        this.contractFileKey = contractFileKey;
+    }
+
+    public String getDeclineFileKey() {
+        return declineFileKey;
+    }
+
+    public void setDeclineFileKey(String declineFileKey) {
+        this.declineFileKey = declineFileKey;
+    }
+
+    public String getAwardFileKey() {
+        return awardFileKey;
+    }
+
+    public void setAwardFileKey(String awardFileKey) {
+        this.awardFileKey = awardFileKey;
+    }
+
+    public TenderStatus getTenderStatus() {
+        return tenderStatus;
+    }
+
+    public void setTenderStatus(TenderStatus tenderStatus) {
+        this.tenderStatus = tenderStatus;
+    }
 
     public Long getDeadLineOfSub() {return deadLineOfSub;}
 

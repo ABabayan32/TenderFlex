@@ -1,7 +1,6 @@
 package com.example.tenderflex.controller;
 
 
-import com.example.tenderflex.model.Country;
 import com.example.tenderflex.model.Currency;
 import com.example.tenderflex.service.CurrencyService;
 import org.springframework.http.HttpStatusCode;
@@ -15,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/currencies")
 public class CurrencyController {
-     public final CurrencyService currencyService;
+     private final CurrencyService currencyService;
 
      public CurrencyController (CurrencyService currencyService) {
          this.currencyService=currencyService;

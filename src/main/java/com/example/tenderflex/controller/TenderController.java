@@ -16,8 +16,8 @@ import java.util.List;
 @RequestMapping("/tenders")
 public class TenderController {
 
-    public final TenderService tenderService;
-    public final OfferService offerService;
+    private final TenderService tenderService;
+    private final OfferService offerService;
     @Autowired
     public TenderController (TenderService tenderService, OfferService offerService) {
         this.tenderService=tenderService;
@@ -36,12 +36,23 @@ public class TenderController {
         return new ResponseEntity<>(allTenders,HttpStatusCode.valueOf(200));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity <Integer> getAllTenders() {
+        return new ResponseEntity<>(tenderService.getAllTendersCount(),HttpStatusCode.valueOf(200));
+    }
+
     @GetMapping("/me")
     @ResponseBody
     public ResponseEntity<List<Tender>> getTendersByUser(@RequestParam(required = false,name = "count") Integer count,
                                                          @RequestParam(required = true,name = "page") Integer page) {
         List<Tender> tenders = tenderService.getTendersByUser(new Paging(count, page)) ;
         return new ResponseEntity<>(tenders, HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/me/count")
+    @ResponseBody
+    public ResponseEntity<Integer> getTendersByUser() {
+        return new ResponseEntity<>(tenderService.getTendersCountByUser(), HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/{id}")
@@ -55,20 +66,26 @@ public class TenderController {
 
     @GetMapping("/{id}/offers")
     public ResponseEntity <List<Offer>> getOffersByTenderId (@PathVariable(value = "id") Long tenderId,
-                                                             @RequestParam(required = false,name = "count") Integer count,
-                                                             @RequestParam(required = true,name = "page") Integer page) {
-        List <Offer > allOffers = offerService.getOffersByTenderId(tenderId,new Paging(count,page));
-        if(allOffers.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
+                                                             @RequestParam(required = false,name = "count") Integer count) {
+        List <Offer > allOffers = offerService.getOffersByTenderId(tenderId);
+        if(allOffers == null) {
+            return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
         }
         return new ResponseEntity<>(allOffers, HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/me/offers")
+    @ResponseBody
     public ResponseEntity <List<Offer>> getOffersByTenders(@RequestParam(required = false,name = "count") Integer count,
                                                            @RequestParam(required = true,name = "page") Integer page) {
         List<Offer> offers = offerService.getOffersByTenders(new Paging(count,page));
         return new ResponseEntity<>(offers,HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/me/offers/count")
+    @ResponseBody
+    public ResponseEntity <Integer> getOffersByTenders() {
+        return new ResponseEntity<>(offerService.getOffersCountByTenders(),HttpStatusCode.valueOf(200));
     }
 
 }

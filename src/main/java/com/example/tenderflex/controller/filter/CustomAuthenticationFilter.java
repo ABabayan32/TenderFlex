@@ -18,10 +18,7 @@ import org.springframework.security.core.userdetails.User;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.tenderflex.util.Constants.SECRET;
@@ -46,12 +43,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC512(SECRET.getBytes());
+        List<String> role = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         String access_token = JWT.create().withSubject(user.getUsername()).withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000))
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("roles", role)
                 .sign(algorithm);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);
+        tokens.put("role", role.isEmpty() ? null : role.get(0).substring(5));
         response.setContentType(APPLICATION_JSON_VALUE);
+        response.setHeader("Access-Control-Allow-Origin", "*");
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 }

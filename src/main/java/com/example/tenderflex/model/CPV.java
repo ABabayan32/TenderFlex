@@ -1,9 +1,13 @@
 package com.example.tenderflex.model;
 
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class CPV {
+
+    public CPV(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
     private String name;
     private int id;
 

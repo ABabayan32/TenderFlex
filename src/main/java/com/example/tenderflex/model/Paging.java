@@ -1,8 +1,5 @@
 package com.example.tenderflex.model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 public class Paging {
 
     private final Integer count ;

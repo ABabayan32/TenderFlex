@@ -1,6 +1,5 @@
 package com.example.tenderflex.service.impl;
 
-import com.example.tenderflex.model.Role;
 import com.example.tenderflex.model.User;
 import com.example.tenderflex.repository.UserRepository;
 import com.example.tenderflex.service.UserService;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

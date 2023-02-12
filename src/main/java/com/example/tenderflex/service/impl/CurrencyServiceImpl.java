@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CurrencyServiceImpl implements CurrencyService {
 
-    public final CurrencyRepository currencyRepository;
+    private final CurrencyRepository currencyRepository;
 
     public CurrencyServiceImpl (CurrencyRepository currencyRepository) {
         this.currencyRepository=currencyRepository;
