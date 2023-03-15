@@ -23,6 +23,7 @@ public class TenderRepositoryImpl implements TenderRepository {
 
          return jdbcTemplate.query("SELECT * FROM tender_flex.tender " +
                          "LEFT JOIN tender_flex.tender_status ON tender_status.id = tender.tender_status_id " +
+                         "LEFT JOIN tender_flex.cpv ON cpv.cpv_id = tender.cpv_id " +
                  "WHERE \"user_id\" = ? ORDER BY tender.tender_id LIMIT ? OFFSET ?;", new TenderMapper(), userId,
                  paging.getCount(), paging.getIndex());
     }
@@ -68,7 +69,6 @@ public class TenderRepositoryImpl implements TenderRepository {
                  tender.getDeadForSinging(),
                  tender.getName(),
                  tender.getCountryId(),
-                 tender.getCvpCodeId(),
                  tender.getTenderTypeId(),
                  tender.getCurrencyId(),
                  tender.getUserId());
@@ -80,6 +80,7 @@ public class TenderRepositoryImpl implements TenderRepository {
 
         return jdbcTemplate.query("SELECT * FROM tender_flex.tender " +
                 "LEFT JOIN tender_flex.tender_status ON tender_status.id = tender.tender_status_id " +
+                "LEFT JOIN tender_flex.cpv ON cpv.cpv_id = tender.cpv_id " +
                 " ORDER BY tender.tender_id " +
                 "LIMIT ? OFFSET ? ",new TenderMapper(), paging.getCount(), paging.getIndex());
     }
@@ -93,6 +94,7 @@ public class TenderRepositoryImpl implements TenderRepository {
     public Tender getTenderByTenderId( Long tenderId) {
         List <Tender> tenders =jdbcTemplate.query("SELECT * FROM tender_flex.tender " +
                         "LEFT JOIN tender_flex.tender_status ON tender_status.id = tender.tender_status_id " +
+                        "LEFT JOIN tender_flex.cpv ON cpv.cpv_id = tender.cpv_id " +
                         " WHERE \"tender_id\" = ?;",
                 new TenderMapper(),tenderId) ;
         if(tenders.isEmpty()) {

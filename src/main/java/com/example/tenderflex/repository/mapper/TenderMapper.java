@@ -1,5 +1,6 @@
 package com.example.tenderflex.repository.mapper;
 
+import com.example.tenderflex.model.CPV;
 import com.example.tenderflex.model.Tender;
 import com.example.tenderflex.model.TenderStatus;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,10 +15,13 @@ public class TenderMapper implements RowMapper<Tender> {
 
     public Tender mapRow(ResultSet rs, int rowNum) throws SQLException {
         long tenderStatusId = rs.getLong("id");
+
         TenderStatus tenderStatus = null;
         if(tenderStatusId != 0){
             tenderStatus = new TenderStatus(tenderStatusId, rs.getString("name"));
         }
+       CPV cpv=new CPV(rs.getString("cpv_name"),rs.getString("cpv-field"),rs.getLong("cpv_id"));
+
         return new Tender(rs.getLong("tender_id"),
                 rs.getString("tender_name"),
                 rs.getLong("user_id"),
@@ -33,11 +37,11 @@ public class TenderMapper implements RowMapper<Tender> {
                 rs.getLong("deadLineOfSub"),
                 rs.getLong("deadForSinging"),
                 tenderStatus,
+                cpv,
                 rs.getString("contract_file_key"),
                 rs.getString("decline_file_key"),
                 rs.getString("award_file_key"),
                 rs.getLong("country_id"),
-                rs.getLong("cpv_id"),
                 rs.getLong("type_id"),
                 rs.getLong("currency_id")
         );

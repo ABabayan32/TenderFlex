@@ -7,8 +7,8 @@ public class Tender {
 
     public Tender(Long id, String name, Long userId, String contractorName, String nationalRegNumber, String townCity,
                   String contactPersonName, String contactPersonSurname, String phoneNumber, Double minValue, Double maxValue,
-                  Long publicDate, Long deadLineOfSub, Long deadForSinging, TenderStatus tenderStatus, String contractFileKey,
-                  String declineFileKey, String awardFileKey, Long countryId, Long cvpCodeId, Long tenderTypeId, Long currencyId) {
+                  Long publicDate, Long deadLineOfSub, Long deadForSinging, TenderStatus tenderStatus,CPV cpv, String contractFileKey,
+                  String declineFileKey, String awardFileKey, Long countryId,  Long tenderTypeId, Long currencyId) {
         this.id = id;
         this.name = name;
         this.userId = userId;
@@ -24,11 +24,11 @@ public class Tender {
         this.deadLineOfSub = deadLineOfSub;
         this.deadForSinging = deadForSinging;
         this.tenderStatus = tenderStatus;
+        this.cpv=cpv;
         this.contractFileKey = contractFileKey;
         this.declineFileKey = declineFileKey;
         this.awardFileKey = awardFileKey;
         this.countryId = countryId;
-        this.cvpCodeId = cvpCodeId;
         this.tenderTypeId = tenderTypeId;
         this.currencyId = currencyId;
     }
@@ -54,7 +54,7 @@ public class Tender {
     private Long deadForSinging;
 
     private TenderStatus tenderStatus;
-
+     private CPV cpv;
     private String contractFileKey;
 
     private String declineFileKey;
@@ -62,7 +62,7 @@ public class Tender {
     private String awardFileKey;
 
     private Long countryId;
-    private Long cvpCodeId;
+
 
     private Long tenderTypeId;
 
@@ -85,13 +85,6 @@ public class Tender {
         this.currencyId = currencyId;
     }
 
-    public Long getCvpCodeId() {
-        return cvpCodeId;
-    }
-
-    public void setCvpCodeId(Long cvpCodeId) {
-        this.cvpCodeId = cvpCodeId;
-    }
 
     public Long getCountryId() {
         return countryId;
@@ -233,6 +226,13 @@ public class Tender {
 
     public void setMaxValue(Double maxValue) {
         this.maxValue = maxValue;
+    }
+    public CPV getCpv() {
+        return cpv;
+    }
+
+    public void setCpv(CPV cpv) {
+        this.cpv= cpv;
     }
 }
 

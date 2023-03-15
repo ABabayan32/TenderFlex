@@ -64,6 +64,7 @@ public class Config {
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/offers/{id}").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/tenders").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders").hasAnyAuthority(ROLE_BIDDER).and()
+               .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/count").hasAnyAuthority(ROLE_BIDDER).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/me/**").hasAnyAuthority(ROLE_CONTRACTOR).and()
                .authorizeHttpRequests().requestMatchers(HttpMethod.GET,  "/tenders/{id}").hasAnyAuthority(ROLE_FOR_CLOSED_ENDPOINT).and()

@@ -3,19 +3,24 @@ package com.example.tenderflex.model;
 
 public class CPV {
 
-    public CPV(String name, int id) {
+    public CPV(String name,String field, long id) {
         this.name = name;
         this.id = id;
+        this.field=field;
     }
 
     private String name;
-    private int id;
+    private long id;
+    private String field;
 
     public String getName() {return name;}
 
     public void setName(String name) {this.name = name;}
 
-    public int getId() {return id;}
+    public long getId() {return id;}
 
     public void setId(int id) {this.id = id;}
+    public String getField() {return field;}
+    public void setField(String field) {this.field = field;}
+
 }

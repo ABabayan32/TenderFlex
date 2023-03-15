@@ -44,7 +44,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         User user = (User) authResult.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC512(SECRET.getBytes());
         List<String> role = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        String access_token = JWT.create().withSubject(user.getUsername()).withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000))
+        String access_token = JWT.create().withSubject(user.getUsername()).withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*5000))
                 .withClaim("roles", role)
                 .sign(algorithm);
         Map<String, String> tokens = new HashMap<>();
