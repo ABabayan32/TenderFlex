@@ -20,9 +20,9 @@ public class TenderMapper implements RowMapper<Tender> {
         if(tenderStatusId != 0){
             tenderStatus = new TenderStatus(tenderStatusId, rs.getString("name"));
         }
-       CPV cpv=new CPV(rs.getString("cpv_name"),rs.getString("cpv-field"),rs.getLong("cpv_id"));
+       CPV cpv=new CPV(rs.getString("cpv_name"),rs.getString("cpv_field"),rs.getLong("cpv_id"));
 
-        return new Tender(rs.getLong("tender_id"),
+        Tender tender = new Tender(rs.getLong("tender_id"),
                 rs.getString("tender_name"),
                 rs.getLong("user_id"),
                 rs.getString("contractorName"),
@@ -43,8 +43,10 @@ public class TenderMapper implements RowMapper<Tender> {
                 rs.getString("award_file_key"),
                 rs.getLong("country_id"),
                 rs.getLong("type_id"),
-                rs.getLong("currency_id")
+                rs.getLong("currency_id"),
+                rs.getString("tender_description")
         );
+        return tender;
 
     }
 }

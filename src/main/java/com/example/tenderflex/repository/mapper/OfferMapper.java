@@ -28,7 +28,9 @@ public class OfferMapper implements RowMapper<Offer> {
                 rs.getLong("tender_id"),
                 offerStatus,
                 rs.getLong("offer_date"),
-                rs.getString("offer_file_key")
+                rs.getString("offer_file_key"),
+                rs.getLong("currency_id"),
+                rs.getLong("country_id")
         );
     }
 }

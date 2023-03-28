@@ -18,7 +18,7 @@ public class CPVRepositoryImpl implements CPVRepository {
 
     @Override
     public List<CPV> getAllCPVs() {
-        return jdbcTemplate.query("SELECT*FROM tender_flex.CPV", new CPVMapper());
+        return jdbcTemplate.query("SELECT*FROM tender_flex.cpv", new CPVMapper());
     }
 
     @Override

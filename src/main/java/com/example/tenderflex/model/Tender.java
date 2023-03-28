@@ -8,7 +8,7 @@ public class Tender {
     public Tender(Long id, String name, Long userId, String contractorName, String nationalRegNumber, String townCity,
                   String contactPersonName, String contactPersonSurname, String phoneNumber, Double minValue, Double maxValue,
                   Long publicDate, Long deadLineOfSub, Long deadForSinging, TenderStatus tenderStatus,CPV cpv, String contractFileKey,
-                  String declineFileKey, String awardFileKey, Long countryId,  Long tenderTypeId, Long currencyId) {
+                  String declineFileKey, String awardFileKey, Long countryId,  Long tenderTypeId, Long currencyId,String tenderDescription) {
         this.id = id;
         this.name = name;
         this.userId = userId;
@@ -31,6 +31,7 @@ public class Tender {
         this.countryId = countryId;
         this.tenderTypeId = tenderTypeId;
         this.currencyId = currencyId;
+        this.tenderDescription=tenderDescription;
     }
 
     private Long id;
@@ -67,6 +68,9 @@ public class Tender {
     private Long tenderTypeId;
 
     private Long currencyId;
+
+    private String tenderDescription;
+
 
 
     public Long getTenderTypeId() {
@@ -233,6 +237,14 @@ public class Tender {
 
     public void setCpv(CPV cpv) {
         this.cpv= cpv;
+    }
+
+
+    public String getTenderDescription() {
+        return tenderDescription;
+    }
+
+    public void setTenderDescription(String tenderDescription) {this.tenderDescription = tenderDescription;
     }
 }
 

@@ -2,6 +2,7 @@ package com.example.tenderflex.service.impl;
 
 import com.example.tenderflex.model.Paging;
 import com.example.tenderflex.model.Tender;
+import com.example.tenderflex.model.TenderStatus;
 import com.example.tenderflex.model.User;
 import com.example.tenderflex.repository.TenderRepository;
 import com.example.tenderflex.service.TenderService;
@@ -9,6 +10,7 @@ import com.example.tenderflex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.tenderflex.util.Constants.ROLE_BIDDER;
@@ -43,6 +45,7 @@ public class TenderServiceImpl implements TenderService {
      public void addTender (Tender tender ) {
           User user= userService.getCurrentUser();
           tender.setUserId(user.getUserId());
+          tender.setTenderStatus(new TenderStatus(1L, null));
           tenderRepository.createTender(tender);
     }
 
@@ -59,8 +62,18 @@ public class TenderServiceImpl implements TenderService {
     }
 
     @Override
-    public Tender getTenderByTenderId(Long tenderId) {
-        return tenderRepository.getTenderByTenderId(tenderId);
+    public Tender getTenderByTenderId(Long tenderId, boolean isWithFileKey) {
+       Tender tender = tenderRepository.getTenderByTenderId(tenderId);
+       if(tender != null && !isWithFileKey) {
+           removeDecisionsFilesIfNotApplicable(Collections.singletonList(tender));
+       }
+        return tender;
+    }
+
+    @Override
+    public void updateTenderStatus(Long tenderId) {
+       tenderRepository.updateTenderStatus(tenderId);
+
     }
 
     private void removeDecisionsFilesIfNotApplicable(List<Tender> tenders){

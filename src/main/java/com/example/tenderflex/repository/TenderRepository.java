@@ -15,5 +15,6 @@ public interface TenderRepository {
     List <Tender> getAllTenders (Paging page) ;
     Integer getAllTendersCount() ;
      Tender getTenderByTenderId (Long tenderId);
+    void updateTenderStatus( Long tender_id);
 
 }

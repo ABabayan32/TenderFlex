@@ -38,8 +38,9 @@ public class TenderRepositoryImpl implements TenderRepository {
     public void createTender(Tender tender) {
          jdbcTemplate.update(
                          "INSERT INTO tender_flex.tender ("+
-                                 "contractorname,"+
-                                  "nationalRegNumber," +
+                                 "contractorname," +
+                                 "tender_status_id,"+
+                                 "nationalRegNumber," +
                                  "towncity," +
                                  "contactPersonName," +
                                  "contactPersonsurname," +
@@ -54,9 +55,14 @@ public class TenderRepositoryImpl implements TenderRepository {
                                  "cpv_id," +
                                  "type_id," +
                                  "currency_id," +
-                                 "user_id ) " +
-                 "VALUES (?,?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?, ?, ?, ?)",
+                                 "user_id," +
+                                 "decline_file_key," +
+                                 "award_file_key," +
+                                 "contract_file_key," +
+                                 "tender_description)"+
+                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
                  tender.getContractorName(),
+                 tender.getTenderStatus() != null ? tender.getTenderStatus().getId() : null,
                  tender.getNationalRegNumber(),
                  tender.getTownCity(),
                  tender.getContactPersonName(),
@@ -69,9 +75,14 @@ public class TenderRepositoryImpl implements TenderRepository {
                  tender.getDeadForSinging(),
                  tender.getName(),
                  tender.getCountryId(),
+                 tender.getCpv().getId(),
                  tender.getTenderTypeId(),
                  tender.getCurrencyId(),
-                 tender.getUserId());
+                 tender.getUserId(),
+                 tender.getDeclineFileKey(),
+                 tender.getAwardFileKey(),
+                 tender.getContractFileKey(),
+                 tender.getTenderDescription());
 
     }
 
@@ -100,6 +111,12 @@ public class TenderRepositoryImpl implements TenderRepository {
         if(tenders.isEmpty()) {
             return null;}
         return tenders.get(0);
+    }
+
+    @Override
+    public void updateTenderStatus(Long tenderId) {
+        jdbcTemplate.update("UPDATE tender_flex.tender SET tender_status_id=2 WHERE tender_id=?",tenderId);
+
     }
 
 

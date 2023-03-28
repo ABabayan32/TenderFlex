@@ -34,7 +34,7 @@ public class OfferController {
         return new ResponseEntity<>(offerService.getOffersCountByCurrentUser(),HttpStatusCode.valueOf(200));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("me/{id}")
     public ResponseEntity <Offer> getOfferByOfferId (@PathVariable(value = "id") Long offerId) {
         Offer offer = offerService.getOfferByOfferId(offerId);
         if (offer == null) {
@@ -59,7 +59,7 @@ public class OfferController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateOffer(@PathVariable(value = "id") Long id, @RequestBody Map<String,Long> status) {
-        if(offerService.changeOfferStatus(id, status.get("statusId"))){
+        if(offerService.changeOfferStatus(id, status.get("statusId"), status.get("tenderId"))){
             return new ResponseEntity<>(HttpStatusCode.valueOf(200));
         }
         return new ResponseEntity<>(HttpStatusCode.valueOf(403));

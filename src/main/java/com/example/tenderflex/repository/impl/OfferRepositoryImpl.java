@@ -17,12 +17,11 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
-    public List<Offer> getOffersByTenderId(Long tenderId,Long userId) {
-        return jdbcTemplate.query("SELECT * FROM tender_flex.offer " +
-                        "LEFT JOIN tender_flex.offer_status ON offer_status.id = offer.offer_status_id " +
-                        "where tender_flex.offer.tender_id = ? AND tender_flex.offer.tender_id IN (SELECT tender.tender_id FROM " +
-                        "tender_flex.tender where tender.user_id=?) " +
-                        "ORDER BY offer.offer_id;", new OfferMapper(),tenderId,userId);
+    public Offer getOfferByTenderId(Long tenderId, Long userId) {
+        List<Offer> offers = jdbcTemplate.query("SELECT * FROM tender_flex.offer " +
+                "LEFT JOIN tender_flex.offer_status ON offer_status.id = offer.offer_status_id " +
+                "where tender_flex.offer.tender_id = ? AND tender_flex.offer.user_id = ?;", new OfferMapper(),tenderId,userId);
+        return offers.isEmpty() ? null : offers.get(0);
     }
 
     @Override
@@ -40,11 +39,24 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
-    public Offer getOfferByOfferId(Long offerId) {
+    public Offer getOfferByOfferIdForBidder(Long userId, Long offerId) {
         List<Offer> offer = jdbcTemplate.query("SELECT * FROM tender_flex.offer " +
                         "LEFT JOIN tender_flex.offer_status ON offer_status.id = offer.offer_status_id " +
-                        " WHERE \"offer_id\"=?; ",
-                new OfferMapper(), offerId);
+                        " WHERE \"offer_id\"=? AND \"user_id\"=?;",
+                new OfferMapper(), offerId, userId);
+        if (offer.isEmpty()) {
+            return null;
+        }
+        return offer.get(0);
+    }
+
+    @Override
+    public Offer getOfferByOfferIdForContractor(Long userId, Long offerId) {
+        List<Offer> offer = jdbcTemplate.query("SELECT * FROM tender_flex.offer " +
+                        "LEFT JOIN tender_flex.offer_status ON offer_status.id = offer.offer_status_id " +
+                        " WHERE \"offer_id\"=? AND tender_flex.offer.tender_id IN" +
+                        " (SELECT tender.tender_id FROM tender_flex.tender where tender.user_id = ?)",
+                new OfferMapper(), offerId, userId);
         if (offer.isEmpty()) {
             return null;
         }
@@ -65,8 +77,12 @@ public class OfferRepositoryImpl implements OfferRepository {
                         "phone_number," +
                         "bid_price," +
                          "offer_date," +
+                         "currency_id," +
+                         "country_id," +
+                         "offer_file_key," +
+                         "offer_status_id," +
                         "user_id)" +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 offer.getName(),
                 offer.getTenderId(),
                 offer.getOfficialName(),
@@ -77,6 +93,10 @@ public class OfferRepositoryImpl implements OfferRepository {
                 offer.getPhoneNumber(),
                 offer.getBidPrice(),
                 offer.getOfferDate(),
+                offer.getCurrencyId(),
+                offer.getCountryId(),
+                offer.getOfferFileKey(),
+                 offer.getOfferStatus().getId(),
                 offer.getUserId());
     }
 
@@ -84,8 +104,8 @@ public class OfferRepositoryImpl implements OfferRepository {
     public List<Offer> getOffersByTenders(Long userId, Paging page) {
         return jdbcTemplate.query("SELECT * FROM tender_flex.offer " +
                         "LEFT JOIN tender_flex.offer_status ON offer_status.id = offer.offer_status_id " +
-                        " where tender_flex.offer.tender_id" +
-                        " IN (SELECT tender.tender_id FROM tender_flex.tender where tender.user_id = ?) LIMIT ? OFFSET ?;"
+                        " where tender_flex.offer.tender_id IN " +
+                        "(SELECT tender.tender_id FROM tender_flex.tender where tender.user_id = ?) LIMIT ? OFFSET ?;"
                 ,new OfferMapper(),
                 userId,page.getCount(),page.getIndex());
     }
@@ -95,6 +115,22 @@ public class OfferRepositoryImpl implements OfferRepository {
         return jdbcTemplate.queryForObject("SELECT Count(*) FROM tender_flex.offer " +
                         " where tender_flex.offer.tender_id" +
                         " IN (SELECT tender.tender_id FROM tender_flex.tender where tender.user_id = ?)", Integer.class, userId);
+    }
+
+    @Override
+    public Integer getOffersCountByTenderId(Long tenderId,Long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tender_flex.offer " +
+                "where tender_flex.offer.tender_id = ? AND tender_flex.offer.tender_id IN (SELECT tender.tender_id FROM " +
+                "tender_flex.tender where tender.user_id=?);", Integer.class,tenderId,userId);
+    }
+
+    @Override
+    public List<Offer> getOffersByTenderId(Long tenderId,Long userId) {
+        return jdbcTemplate.query("SELECT * FROM tender_flex.offer " +
+                "LEFT JOIN tender_flex.offer_status ON offer_status.id = offer.offer_status_id " +
+                "where tender_flex.offer.tender_id = ? AND tender_flex.offer.tender_id IN (SELECT tender.tender_id FROM " +
+                "tender_flex.tender where tender.user_id=?) " +
+                "ORDER BY offer.offer_id;", new OfferMapper(),tenderId,userId);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class CPVMapper implements RowMapper<CPV> {
     public CPV mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new CPV (rs.getString("CPV_name") ,
-               rs.getString("CPV-field"),
+               rs.getString("CPV_field"),
                 rs.getLong("CPV_id"));
 
     }

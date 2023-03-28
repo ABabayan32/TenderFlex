@@ -13,7 +13,9 @@ public interface TenderService {
      void addTender (Tender tender) ;
      List <Tender> getAllTenders (Paging paging);
      Integer getAllTendersCount ();
-     Tender getTenderByTenderId (Long tenderId);
+     Tender getTenderByTenderId (Long tenderId, boolean isWithFileKey);
+
+     void updateTenderStatus( Long tenderId);
 
 
 }

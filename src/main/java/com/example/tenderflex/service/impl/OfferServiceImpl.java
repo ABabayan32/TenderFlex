@@ -8,6 +8,7 @@ import com.example.tenderflex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -27,12 +28,18 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> getOffersByTenderId(Long tenderId) {
-    Tender tender = tenderService.getTenderByTenderId(tenderId);
+    Tender tender = tenderService.getTenderByTenderId(tenderId, false);
     User currentUser = userService.getCurrentUser();
         if(tender.getUserId().equals(currentUser.getUserId())){
-            return offerRepository.getOffersByTenderId(tenderId,userService.getCurrentUser().getUserId());
+            return offerRepository.getOffersByTenderId(tenderId,currentUser.getUserId());
         }
         return null;
+    }
+
+    @Override
+    public Offer getOfferByTenderId(Long tenderId) {
+        User currentUser = userService.getCurrentUser();
+        return offerRepository.getOfferByTenderId(tenderId, currentUser.getUserId());
     }
 
     @Override
@@ -51,7 +58,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Offer getOfferByOfferId(Long offerId) {
-        return offerRepository.getOfferByOfferId(offerId);
+        return offerRepository.getOfferByOfferIdForBidder(userService.getCurrentUser().getUserId(), offerId);
     }
 
     @Override
@@ -73,32 +80,51 @@ public class OfferServiceImpl implements OfferService {
         return offerRepository.getOffersCountByTenders(userService.getCurrentUser().getUserId());
     }
 
-    @Override
-    public String getFileKeyByOfferId(Long id) {
-        Offer offer = offerRepository.getOfferByOfferId(id);
+    public Integer getOffersCountByTenderId(Long tenderId){
         User currentUser = userService.getCurrentUser();
+        return offerRepository.getOffersCountByTenderId(tenderId, currentUser.getUserId());
+    }
+
+    @Override
+    public String getFileKeyByOfferId(Long offerId) {
+        User currentUser = userService.getCurrentUser();
+        Offer offer = offerRepository.getOfferByOfferIdForBidder(currentUser.getUserId(), offerId);
         if(offer.getUserId().equals(currentUser.getUserId())){
             if(offer.getOfferStatus().getId() == OFFER_STATUS_AWARDED_CONTRACTOR_ID
                     || offer.getOfferStatus().getId() == OFFER_STATUS_APPROVED_BIDDER_ID ){
-                return tenderService.getTenderByTenderId(offer.getTenderId()).getAwardFileKey();
-            } else if(offer.getOfferStatus().getId() == OFFER_STATUS_DECLINED_CONTRACTOR_ID){
-                return tenderService.getTenderByTenderId(offer.getTenderId()).getDeclineFileKey();
+                return tenderService.getTenderByTenderId(offer.getTenderId(), true).getAwardFileKey();
+            } else {
+                Tender tender = tenderService.getTenderByTenderId(offer.getTenderId(), true);
+                if(offer.getOfferStatus().getId() == OFFER_STATUS_DECLINED_CONTRACTOR_ID){
+                    return tenderService.getTenderByTenderId(offer.getTenderId(), true).getDeclineFileKey();
+                } else if(tender.getTenderStatus().getId() != 1) {
+                    return tenderService.getTenderByTenderId(offer.getTenderId(), true).getDeclineFileKey();
+                }
+                return null;
             }
         };
         return null;
     }
 
     @Override
-    public boolean changeOfferStatus(Long offerId, Long statusId) {
+    public boolean changeOfferStatus(Long offerId, Long statusId, Long tenderId) {
         User currentUser = userService.getCurrentUser();
-        Offer offer = offerRepository.getOfferByOfferId(offerId);
+        Offer offer;
+        if(statusId == OFFER_STATUS_DECLINED_BIDDER_ID || statusId == OFFER_STATUS_APPROVED_BIDDER_ID){
+            offer = offerRepository.getOfferByOfferIdForBidder(currentUser.getUserId(), offerId);
+        } else if (statusId == OFFER_STATUS_AWARDED_CONTRACTOR_ID || statusId == OFFER_STATUS_DECLINED_CONTRACTOR_ID){
+            offer = offerRepository.getOfferByOfferIdForContractor(currentUser.getUserId(), offerId);
+        } else throw new RuntimeException("No Permission for action");
         if(currentUser.getUserId().equals(offer.getUserId())
         && offer.getOfferStatus().getId() == OFFER_STATUS_AWARDED_CONTRACTOR_ID
                 && (statusId == OFFER_STATUS_DECLINED_BIDDER_ID || statusId == OFFER_STATUS_APPROVED_BIDDER_ID)){
                 offerRepository.updateOfferStatus(offerId, statusId);
+                if(statusId == OFFER_STATUS_APPROVED_BIDDER_ID) {
+                    tenderService.updateTenderStatus(tenderId);
+                }
                 return true;
         }
-        Tender tender = tenderService.getTenderByTenderId(offer.getTenderId());
+        Tender tender = tenderService.getTenderByTenderId(offer.getTenderId(), false);
         if(tender.getUserId().equals(currentUser.getUserId())
                 && offer.getOfferStatus().getId().equals(OFFER_STATUS_SENT_ID)
                 && (statusId == OFFER_STATUS_AWARDED_CONTRACTOR_ID || statusId == OFFER_STATUS_DECLINED_CONTRACTOR_ID)){

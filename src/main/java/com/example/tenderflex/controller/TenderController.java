@@ -5,6 +5,7 @@ import com.example.tenderflex.model.Paging;
 import com.example.tenderflex.model.Tender;
 import com.example.tenderflex.service.OfferService;
 import com.example.tenderflex.service.TenderService;
+import com.example.tenderflex.service.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +17,24 @@ import java.util.List;
 @RequestMapping("/tenders")
 public class TenderController {
 
+    private final Validator validator;
     private final TenderService tenderService;
     private final OfferService offerService;
     @Autowired
-    public TenderController (TenderService tenderService, OfferService offerService) {
+    public TenderController (Validator validator, TenderService tenderService, OfferService offerService) {
+        this.validator = validator;
         this.tenderService=tenderService;
         this.offerService = offerService;
     }
 
     @PostMapping ()
-    public void addTender(@RequestBody Tender tender) {
-        tenderService.addTender(tender);
+    public ResponseEntity <Void> addTender(@RequestBody Tender tender) {
+        if(validator.validate(tender)){
+            tenderService.addTender(tender);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping()
@@ -57,7 +65,7 @@ public class TenderController {
 
     @GetMapping("/{id}")
     public ResponseEntity <Tender> getTenderByTenderId (@PathVariable(value = "id") Long tenderId) {
-        Tender tender = tenderService.getTenderByTenderId(tenderId);
+        Tender tender = tenderService.getTenderByTenderId(tenderId, false);
         if(tender == null) {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
         }
@@ -72,6 +80,20 @@ public class TenderController {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(403));
         }
         return new ResponseEntity<>(allOffers, HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/{id}/offers/me")
+    public ResponseEntity <Offer> getOfferByTenderId (@PathVariable(value = "id") Long tenderId) {
+        Offer offer = offerService.getOfferByTenderId(tenderId);
+        if(offer == null){
+            return new ResponseEntity<>(null, HttpStatusCode.valueOf(404));
+        }
+        return new ResponseEntity<>(offer, HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/{id}/offers/count")
+    public ResponseEntity <Integer> getOfferCountByTenderId (@PathVariable(value = "id") Long tenderId) {
+        return new ResponseEntity<>(offerService.getOffersCountByTenderId(tenderId), HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/me/offers")

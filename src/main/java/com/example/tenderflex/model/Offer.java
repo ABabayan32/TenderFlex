@@ -3,10 +3,15 @@ package com.example.tenderflex.model;
 
 public class Offer {
 
+    public Offer() {
+    }
+
     public Offer(int id, String name, String officialName, String natRegNumber, String townCity, String contPersonName,
                  String contPersonSurname, String phoneNumber, int bidPrice, Long userId, Long tenderId, OfferStatus offerStatus,
                  Long offerDate,
-                 String offerFileKey) {
+                 String offerFileKey,
+                 Long currencyId,
+                 Long countryId) {
         this.id = id;
         this.name = name;
         this.officialName = officialName;
@@ -21,6 +26,8 @@ public class Offer {
         this.offerStatus = offerStatus;
         this.offerFileKey = offerFileKey;
         this.offerDate = offerDate;
+        this.currencyId = currencyId;
+        this.countryId = countryId;
     }
 
     private int id;
@@ -35,8 +42,26 @@ public class Offer {
     private Long userId;
     private Long tenderId;
     private OfferStatus offerStatus;
+    private Long countryId;
+    private Long currencyId;
     private Long offerDate;
     private String offerFileKey;
+
+    public Long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+
+    public Long getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(Long currencyId) {
+        this.currencyId = currencyId;
+    }
 
     public Long getOfferDate() {
         return offerDate;
